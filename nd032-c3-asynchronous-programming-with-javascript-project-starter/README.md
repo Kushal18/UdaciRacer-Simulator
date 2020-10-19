@@ -1,6 +1,8 @@
 # Welcome to the One and only UdaciRacer Simulation Game
 
-This project is as part of the asynchronous programming of Udacity. 
+This project is as part of the learning asynchronous programming of Udacity. 
+
+Refer screenshots folder for the UI screen.
 
 ## Project Introduction
 
@@ -14,7 +16,7 @@ The game has three main views:
 
 ## Getting Started
 
-In order to build this game, we need to run two things: the game engine API and the front end. To start the front end. Run ```npm install && npm start```. 
+In order to build this game, we need to run two things: the game engine API and the front end. To start the front end.
 
 ### Start the Server
 
@@ -41,56 +43,3 @@ Note that this process will use your terminal tab, so you will have to open a ne
 ### Start the Frontend
 
 First, run your preference of `npm install && npm start` or `yarn && yarn start` at the root of this project. Then you should be able to access http://localhost:3000.
-
-## Project Requirements
-
-This starter code base has directions for you in `src/client/assets/javascript/index.js`. There you will be directed to use certain asynchronous methods to achieve tasks. You will know you're making progress as you can play through more and more of the game.
-
-### API Calls
-
-To complete the project you must first create the calls to the API. These will all be fetch requests, and all information needed to create the request is provided in the instructions. The API calls are all at the bottom of the file: `src/client/assets/javascript/index.js`.
-
-Below are a list of the API endpoints and the shape of the data they return. These are all of the endpoints you need to complete the game. Consult this information often as you complete the project:
-
-[GET] `api/tracks`
-List of all tracks
-
-- id: number (1)
-- name: string ("Track 1")
-- segments: number[]([87,47,29,31,78,25,80,76,60,14....])
-
-[GET] `api/cars`
-List of all cars
-
-- id: number (3)
-- driver_name: string ("Racer 1")
-- top_speed: number (500)
-- acceleration: number (10)
-- handling: number (10)
-
-[GET] `api/races/${id}`
-Information about a single race
-
-- status: RaceStatus ("unstarted" | "in-progress" | "finished")
-- positions object[] ([{ car: object, final_position: number (omitted if empty), speed: number, segment: number}])
-
-[POST] `api/races`
-Create a race
-
-- id: number
-- track: string
-- player_id: number
-- cars: Cars[] (array of cars in the race)
-- results: Cars[] (array of cars in the position they finished, available if the race is finished)
-
-[POST] `api/races/${id}/start`
-Begin a race
-
-- Returns nothing
-
-[POST] `api/races/${id}/accelerate`
-Accelerate a car
-
-- Returns nothing
-
-To complete the race logic, find all the TODO tags in index.js and read the instructions.

@@ -1,7 +1,7 @@
 // PROVIDED CODE BELOW (LINES 1 - 80) DO NOT REMOVE
 
 // The store will hold all information needed globally
-var store = {
+const store = {
   track_id: undefined,
   player_id: undefined,
   race_id: undefined,
@@ -102,7 +102,7 @@ function runRace(raceID) {
           } else if (res.status === "finished") {
             clearInterval(raceInterval);
             renderAt("#race", resultsView(res.positions));
-            resolve();
+            resolve(res);
           }
         }, 500)
         .catch((error) => {
@@ -279,7 +279,7 @@ function resultsView(positions) {
 }
 
 function raceProgress(positions) {
-  let userPlayer = positions.find((e) => e.id === store.player_id);
+  const userPlayer = positions.find((e) => e.id === store.player_id);
 
   userPlayer.driver_name += " (you)";
 

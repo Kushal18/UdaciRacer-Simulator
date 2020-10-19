@@ -75,26 +75,19 @@ async function delay(ms) {
 // This async function controls the flow of the race, add the logic and error handling
 async function handleCreateRace() {
   const { player_id, track_id } = store;
+  if (!track_id || !player_id) {
+	alert(`Please select track and racer to start the race!`);
+	return;
+  }
   try {
-    const race = await createRace(player_id, track_id);
-    renderAt("#race", renderRaceStartView(race));
+	const race = await createRace(player_id, track_id);
+	store.race_id = race.ID - 1;
+	renderAt('#race', renderRaceStartView(race.Track));
+	await runCountdown();
+	await startRace(store.race_id);
+	await runRace(store.race_id);
   } catch (error) {
     console.log(`error while creating the race ${error}`);
-  }
-  try {
-    await runCountdown();
-  } catch (error) {
-    console.log(`error while running the countdown ${error}`);
-  }
-  try {
-    await startRace(store.race_id);
-  } catch (error) {
-    console.log(`error while starting the race ${error}`);
-  }
-  try {
-    await runRace(store.race_id);
-  } catch (error) {
-    console.log(`error while running the race ${error}`);
   }
 }
 
@@ -104,11 +97,7 @@ function runRace(raceID) {
     const raceInterval = setInterval(() => {
 	  getRace(raceID)
 		.then((res) => {
-			res;
-			console.log(`res ${JSON.stringify(res)}`);
-		})
-        .then((res) => {
-          if (res.status === "in-progress") {
+		  if (res.status === "in-progress") {
             renderAt("#leaderBoard", raceProgress(res.positions));
           } else if (res.status === "finished") {
             clearInterval(raceInterval);
@@ -163,7 +152,7 @@ function handleSelectPodRacer(target) {
   target.classList.add("selected");
 
   // TODO - save the selected racer to the store
-  store.race_id = parseInt(target.id);
+  store.player_id = parseInt(target.id);
 }
 
 function handleSelectTrack(target) {
@@ -183,10 +172,12 @@ function handleSelectTrack(target) {
 }
 
 //not sure if the raceId should be passed here.
-function handleAccelerate(raceId) {
-  console.log("accelerate button clicked");
-  // TODO - Invoke the API call to accelerate
-  accelerate(raceId);
+function handleAccelerate() {
+  try {
+	accelerate(store.race_id);
+  } catch(error) {
+	console.log(`error while handeling accelerate ${error}`);
+  }
 }
 
 // HTML VIEWS ------------------------------------------------
@@ -289,9 +280,11 @@ function resultsView(positions) {
 
 function raceProgress(positions) {
   let userPlayer = positions.find((e) => e.id === store.player_id);
+
   userPlayer.driver_name += " (you)";
 
   positions = positions.sort((a, b) => (a.segment > b.segment ? -1 : 1));
+
   let count = 1;
 
   const results = positions.map((p) => {
@@ -356,7 +349,7 @@ function createRace(player_id, track_id) {
   player_id = parseInt(player_id);
   track_id = parseInt(track_id);
   const body = { player_id, track_id };
-
+  console.log(`player_id and track_id ${player_id} and ${track_id}`)
   return fetch(`${SERVER}/api/races`, {
     method: "POST",
     ...defaultFetchOpts(),
